@@ -28,7 +28,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film createFilm(@Valid @RequestBody Film film){
+    public Film createFilm(@Valid @RequestBody Film film) {
         log.info("Получен POST-запрос");
         validate(film);
         film.setId(generatorID++);
@@ -38,7 +38,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film){
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("Получен PUT-запрос");
         validate(film);
         if (!films.containsKey(film.getId())) {
@@ -49,7 +49,7 @@ public class FilmController {
         return film;
     }
 
-    private void validate(Film film){
+    private void validate(Film film) {
         if (film.getReleaseDate().isBefore(CINEMA_BIRTHDAY)) {
             log.warn("Ошибка валидации фильма");
             throw new InvalidReleaseDateException("дата релиза — не может быть раньше 28 декабря 1895 года");

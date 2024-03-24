@@ -14,15 +14,15 @@ class FilmControllerTest {
     FilmController controller = new FilmController();
 
     @Test
-    public void shouldCreateFilm(){
-        Film film = new Film("Тест", "Тестовый", LocalDate.of(2020,12,20), 100);
+    public void shouldCreateFilm() {
+        Film film = new Film("Тест", "Тестовый", LocalDate.of(2020, 12, 20), 100);
         controller.createFilm(film);
         assertTrue(controller.getAllFilms().contains(film));
     }
 
     @Test
-    public void shouldNotCreateFilmBeforeCinemaBirthday(){
-        Film film = new Film("Тест", "Тестовый", LocalDate.of(23,12,20), 100);
+    public void shouldNotCreateFilmBeforeCinemaBirthday() {
+        Film film = new Film("Тест", "Тестовый", LocalDate.of(23, 12, 20), 100);
 
         InvalidReleaseDateException exception = assertThrows(
                 InvalidReleaseDateException.class, () -> controller.createFilm(film));

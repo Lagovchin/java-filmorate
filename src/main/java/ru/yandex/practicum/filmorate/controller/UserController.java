@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody User user){
+    public User createUser(@Valid @RequestBody User user) {
         log.info("Получен POST-запрос");
         validate(user);
         user.setId(generatorID++);
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user){
+    public User updateUser(@Valid @RequestBody User user) {
         log.info("Получен PUT-запрос");
         validate(user);
         if (!users.containsKey(user.getId())) {
@@ -48,7 +48,7 @@ public class UserController {
         return user;
     }
 
-    private void validate(User user){
+    private void validate(User user) {
         if (user.getLogin().contains(" ")) {
             log.warn("Ошибка валидации пользователя");
             throw new InvalidLoginException("логин не может содержать пробелы");
