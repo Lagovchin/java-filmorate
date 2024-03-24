@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exeption.InvalidLoginException;
-import ru.yandex.practicum.filmorate.exeption.InvalidReleaseDateException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
