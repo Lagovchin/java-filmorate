@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -11,14 +12,8 @@ import java.time.LocalDate;
  * Film.
  */
 @Data
+@Builder
 public class Film {
-    public Film(String name, String description, LocalDate releaseDate, int duration) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-    }
-
     private int id;
     @NotBlank(message = "название не может быть пустым")
     private String name;

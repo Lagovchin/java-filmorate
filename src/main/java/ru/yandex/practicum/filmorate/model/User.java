@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -8,14 +9,8 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class User {
-    public User(String email, String login, String name, LocalDate birthday) {
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-    }
-
     private int id;
     @Email(message = "e-mail не может быть пустой и должен содержать символ @")
     @NotBlank(message = "e-mail не может быть пустой и должен содержать символ @")

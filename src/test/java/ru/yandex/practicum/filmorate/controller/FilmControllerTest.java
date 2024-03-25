@@ -9,18 +9,29 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
-    FilmController controller = new FilmController();
+    private FilmController controller = new FilmController();
 
     @Test
     public void shouldCreateFilm() {
-        Film film = new Film("Тест", "Тестовый", LocalDate.of(2020, 12, 20), 100);
+        Film film = Film.builder()
+                .name("Тест")
+                .description("Тестовый")
+                .releaseDate(LocalDate.of(2020, 12, 20))
+                .duration(100)
+                .build();
+
         controller.createFilm(film);
         assertTrue(controller.getAllFilms().contains(film));
     }
 
     @Test
     public void shouldNotCreateFilmBeforeCinemaBirthday() {
-        Film film = new Film("Тест", "Тестовый", LocalDate.of(23, 12, 20), 100);
+        Film film = Film.builder()
+                .name("Тест")
+                .description("Тестовый")
+                .releaseDate(LocalDate.of(23, 12, 20))
+                .duration(100)
+                .build();
 
         InvalidReleaseDateException exception = assertThrows(
                 InvalidReleaseDateException.class, () -> controller.createFilm(film));
@@ -28,11 +39,15 @@ class FilmControllerTest {
     }
 
     @Test
-    public void shouldNotCreateFilmInCinemaBirthday() {
-        Film film = new Film("Тест", "Тестовый", LocalDate.of(1895, 12, 28), 10);
+    public void shouldCreateFilmInCinemaBirthday() {
+        Film film = Film.builder()
+                .name("Тест")
+                .description("Тестовый")
+                .releaseDate(LocalDate.of(1895, 12, 28))
+                .duration(100)
+                .build();
 
         controller.createFilm(film);
         assertTrue(controller.getAllFilms().contains(film));
     }
-
 }
