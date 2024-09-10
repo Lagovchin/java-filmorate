@@ -3,13 +3,15 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exeption.InvalidLoginException;
 import ru.yandex.practicum.filmorate.model.User;
-
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-    private UserController controller = new UserController();
+    private InMemoryUserStorage storage = new InMemoryUserStorage();
+    private UserService service = new UserService(storage);
+    private UserController controller = new UserController(service);
 
     @Test
     public void shouldCreateUser() {
@@ -48,6 +50,6 @@ class UserControllerTest {
                 .build();
 
         controller.createUser(user);
-        assertEquals(user.getLogin(), controller.getUsers().get(user.getId()).getName());
+        assertEquals(user.getLogin(), controller.getUserById(user.getId()).getName());
     }
 }
