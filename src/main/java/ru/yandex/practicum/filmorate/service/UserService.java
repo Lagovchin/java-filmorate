@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exeption.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -38,7 +37,7 @@ public class UserService {
     }
 
     public List<User> getFriendList(int id) {
-        if (userStorage.getUserById(id) == null ) {
+        if (userStorage.getUserById(id) == null) {
             throw new UserDoesNotExistException("Пользователь с ID " + id + " не существует");
         }
         return userStorage.getUserById(id).getFriends().stream()
