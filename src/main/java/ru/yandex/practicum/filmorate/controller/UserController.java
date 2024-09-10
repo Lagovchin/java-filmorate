@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import jakarta.validation.Valid;
 import java.util.Collection;
 import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
