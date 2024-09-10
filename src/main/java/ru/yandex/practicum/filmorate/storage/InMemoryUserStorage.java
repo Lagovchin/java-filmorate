@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Integer, User> users = new HashMap<>();
     private int generatorID = 1;
