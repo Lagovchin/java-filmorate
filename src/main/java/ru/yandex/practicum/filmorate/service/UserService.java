@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserService {
 
-    UserStorage userStorage;
+    private UserStorage userStorage;
 
     public Collection<User> getAllUsers() {
         return userStorage.getAllUsers();
