@@ -1,73 +1,87 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exeption.UserDoesNotExistException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 @Service
-@AllArgsConstructor
+@Slf4j
+@RequiredArgsConstructor
 public class UserService {
 
-    private UserStorage userStorage;
+    @Qualifier("userDbStorage")
+    private final UserStorage userStorage;
+    @Qualifier("friendDbStorage")
+    private final FriendStorage friendStorage;
 
-    public Collection<User> getAllUsers() {
-        return userStorage.getAllUsers();
+    public User create(User user) {
+        return userStorage.create(user).get();
     }
 
-    public User getUserById(int id) {
-        return userStorage.getUserById(id);
-    }
-
-    public User createUser(User user) {
-        return userStorage.createUser(user);
-    }
-
-    public User updateUser(User user) {
-        return userStorage.updateUser(user);
-    }
-
-    public void deleteUser(User user) {
-        userStorage.deleteUser(user);
-    }
-
-    public List<User> getFriendList(int id) {
-        if (userStorage.getUserById(id) == null) {
-            throw new UserDoesNotExistException("Пользователь с ID " + id + " не существует");
+    public User update(User user) {
+        if (findUserById(user.getId()) == null) {
+            return null;
         }
-        return userStorage.getUserById(id).getFriends().stream()
-                .map(userStorage::getUserById)
+        return userStorage.update(user).get();
+    }
+
+    public boolean delete(User user) {
+        return userStorage.delete(user);
+    }
+
+    public List<User> findUsers() {
+        return userStorage.findUsers();
+    }
+
+    public User findUserById(long userId) {
+        return userStorage.findUserById(userId).get();
+    }
+
+    public boolean addInFriends(long id, long friendId) {
+        if ((findUserById(id) == null) || (findUserById(friendId) == null)) {
+            return false;
+        }
+        User friendRequest = userStorage.findUserById(id).get();
+        User friendResponse = userStorage.findUserById(friendId).get();
+        friendStorage.addInFriends(friendRequest, friendResponse);
+        return true;
+    }
+
+    public boolean deleteFromFriends(long id, long friendId) {
+        if ((findUserById(id) == null) || (findUserById(friendId) == null)) {
+            return false;
+        }
+        User friendRequest = userStorage.findUserById(id).get();
+        User friendResponse = userStorage.findUserById(friendId).get();
+        friendStorage.deleteFromFriends(friendRequest, friendResponse);
+        return true;
+    }
+
+    public List<User> findFriends(long id) {
+        if (findUserById(id) == null) {
+            return Collections.EMPTY_LIST;
+        }
+        return friendStorage.findFriends(id).stream()
+                .map(this::findUserById)
                 .collect(Collectors.toList());
     }
 
-    public void addFriend(int userId, int friendId) {
-        if (userStorage.getUserById(userId) == null || userStorage.getUserById(friendId) == null) {
-            throw new UserDoesNotExistException("Пользователь с ID " + userId + " или " + friendId + " не существует");
+    public List<User> findMutualFriends(long id, long otherId) {
+        if ((findUserById(id) == null) || (findUserById(otherId) == null)) {
+            return Collections.EMPTY_LIST;
         }
-        userStorage.getUserById(userId).getFriends().add(friendId);
-        userStorage.getUserById(friendId).getFriends().add(userId);
-    }
-
-    public void deleteFriend(int userId, int friendId) {
-        if (userStorage.getUserById(userId) == null || userStorage.getUserById(friendId) == null) {
-            throw new UserDoesNotExistException("Пользователь с ID " + userId + " или " + friendId + " не существует");
-        }
-        userStorage.getUserById(userId).getFriends().remove(friendId);
-        userStorage.getUserById(friendId).getFriends().remove(userId);
-    }
-
-    public List<User> getMatchFriendList(int userId, int friendId) {
-        if (userStorage.getUserById(userId) == null || userStorage.getUserById(friendId) == null) {
-            throw new UserDoesNotExistException("Пользователь с ID " + userId + " или " + friendId + " не существует");
-        }
-        return userStorage.getUserById(userId).getFriends().stream()
-                .filter(u -> userStorage.getUserById(friendId).getFriends().contains(u))
-                .map(userStorage::getUserById)
+        return findFriends(id).stream()
+                .filter(f -> findFriends(otherId).contains(f))
                 .collect(Collectors.toList());
     }
+
 }
